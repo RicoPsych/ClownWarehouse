@@ -34,7 +34,7 @@ class Performance:
         txt += str(self.art_dir_id)+ ","
         txt += str(self.time)+ ","
         txt += "'" + str(self.location) + "'"
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Act:
@@ -50,7 +50,7 @@ class Act:
         txt += str(self.performance_id)+ ","
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.desc) + "'"
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Act_eq:
@@ -62,7 +62,7 @@ class Act_eq:
         txt = "INSERT INTO act_equipement (equipement_id,act_id) VALUES ("
         txt += str(self.eq_id)+ ","  
         txt += str(self.act_id)
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Equipement:
@@ -74,7 +74,7 @@ class Equipement:
         txt = "INSERT INTO equipements (id,name) VALUES ("
         txt += str(self.id)+ ","  
         txt += "'" + str(self.name)+ "'"
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Act_artist:
@@ -86,7 +86,7 @@ class Act_artist:
         txt = "INSERT INTO artist_act (equipement_id,act_id) VALUES ("
         txt += str(self.artist_id)+ ","  
         txt += str(self.act_id)
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Artist:
@@ -102,7 +102,7 @@ class Artist:
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "',"
         txt += "'" + str(self.pseudonym) + "'"
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Incident:
@@ -118,7 +118,7 @@ class Incident:
         txt += "'" + str(self.type)+ "',"
         txt += "'" + str(self.report)+ "',"
         txt += str(self.act_id) 
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 class Artistic_director:
@@ -132,7 +132,7 @@ class Artistic_director:
         txt += str(self.id)+ ","          
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "'"
-        txt += ")\n"
+        txt += ");\n"
         return txt
 
 
@@ -171,15 +171,30 @@ for date in dates:
 
 
 
+file = open("Survey.csv","w")
+txt = "Id,Name,Survey nr,id1,avg1,id2,avg2,id3,avg3\n"
+
 i = 0
 for performance  in performances: #dodac csvke
     performance : Performance
+    
+    txt+= str(performance.id) +",placeholder," + str(randbelow(3000))
+
     for x in range(3): 
         random_nr = randbelow(len(act_name))
         acts.append(Act(i,performance.id,act_name[random_nr],act_desc[0]))
         eq_acts.append(Act_eq(random_nr,i))
         art_acts.append(Act_artist(randbelow(len(actors)),i))
+
+        txt+= ","+str(i)+"," + str(randbelow(1000)/100)
+
         i+=1
+    txt+="\n"
+
+
+file.write(txt)
+file.close()
+
 
 
 file = open("SQL_Queries.sql","w")
