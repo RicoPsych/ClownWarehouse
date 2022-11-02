@@ -97,7 +97,7 @@ class Artist:
         self.pseudonym = pseudonym
 
     def SQL(self):
-        txt = "INSERT INTO acts (id,name,surname,pseudonym) VALUES ("
+        txt = "INSERT INTO artist (id,name,surname,pseudonym) VALUES ("
         txt += str(self.id)+ ","          
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "',"
@@ -113,7 +113,7 @@ class Incident:
         self.act_id = act_id
     
     def SQL(self):
-        txt = "INSERT INTO acts (id,name,surname,pseudonym) VALUES ("
+        txt = "INSERT INTO incidents (id,type,report,act_id) VALUES ("
         txt += str(self.id)+ ","          
         txt += "'" + str(self.type)+ "',"
         txt += "'" + str(self.report)+ "',"
@@ -128,7 +128,7 @@ class Artistic_director:
         self.surname = surname
     
     def SQL(self):
-        txt = "INSERT INTO acts (id,name,surname,pseudonym) VALUES ("
+        txt = "INSERT INTO artisitc_directors (id,name,surname,pseudonym) VALUES ("
         txt += str(self.id)+ ","          
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "'"
@@ -205,6 +205,35 @@ for x in directors:
 txt+="\n"
 
 for x in performances:
+    txt+= x.SQL()
+
+txt+="\n"
+
+for x in acts:
+    txt+= x.SQL()
+
+txt+="\n"
+
+for x in actors:
+    txt+= x.SQL()
+txt+="\n"
+
+
+for x in equipement:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in eq_acts:
+    txt+= x.SQL()
+
+txt+="\n"
+
+for x in art_acts:
+    txt+= x.SQL()
+
+txt+="\n"
+
+for x in injuries:
     txt+= x.SQL()
 
 
