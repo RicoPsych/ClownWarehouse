@@ -20,6 +20,14 @@ act_name = ["Wystrzał z armaty","Sztuczki na trapezie","Chodzenie po linie","Hu
 act_desc = ["..."]
 incidents_report = [["Złamana Ręka","Złamana noga","Rany cięte","Poparzenia","Skręcona kostka","Zwichnięta ręka"]]
 
+art_name = ["Hubert","Paweł","Szymon","Ola","Ania","Adam"]
+art_surname = ["Wiewór","Kojot","Kotek","Szczur","Mysz","Młot","Gracz","Klaunowski"]
+art_pseud1 = ["Duży","Mały","Gruby","Czerwony","Czarny","Szary"]
+art_pseud2 = ["Nos","Lis","Kot","Szop","Gibuś","Kangur","Grzyb","Żongler"]
+
+
+
+
 
 class Performance:
     def __init__(self,id,art_dir_id,time,location):
@@ -83,7 +91,7 @@ class Act_artist:
         self.act_id = act_id
 
     def SQL(self):
-        txt = "INSERT INTO artist_act (equipement_id,act_id) VALUES ("
+        txt = "INSERT INTO artist_act (artist_id,act_id) VALUES ("
         txt += str(self.artist_id)+ ","  
         txt += str(self.act_id)
         txt += ");\n"
@@ -97,7 +105,7 @@ class Artist:
         self.pseudonym = pseudonym
 
     def SQL(self):
-        txt = "INSERT INTO artist (id,name,surname,pseudonym) VALUES ("
+        txt = "INSERT INTO artists (id,name,surname,pseudonym) VALUES ("
         txt += str(self.id)+ ","          
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "',"
@@ -128,7 +136,7 @@ class Artistic_director:
         self.surname = surname
     
     def SQL(self):
-        txt = "INSERT INTO artisitc_directors (id,name,surname,pseudonym) VALUES ("
+        txt = "INSERT INTO artisitc_directors (id,name,surname) VALUES ("
         txt += str(self.id)+ ","          
         txt += "'" + str(self.name)+ "',"
         txt += "'" + str(self.surname)+ "'"
@@ -140,7 +148,7 @@ directors = []
 performances =[]
 acts = []
 
-actors = []
+artists = []
 equipement = []
 
 eq_acts = []
@@ -157,12 +165,13 @@ for eq in equipement_name:
     directors.append(Equipement(i,eq))
     i+= 1
 
+
 i = 0
-for eq in equipement_name:
-    actors.append(Artist(i,"a","b","c"))
-    i+= 1
-
-
+for name in range(6):
+    for surname in range(8):
+        artists.append(Artist(i,art_name[name],art_surname[surname],art_pseud1[name]+" "+art_pseud2[surname]))
+        i+=1
+        
 
 i = 0
 for date in dates:
@@ -184,7 +193,7 @@ for performance  in performances: #dodac csvke
         random_nr = randbelow(len(act_name))
         acts.append(Act(i,performance.id,act_name[random_nr],act_desc[0]))
         eq_acts.append(Act_eq(random_nr,i))
-        art_acts.append(Act_artist(randbelow(len(actors)),i))
+        art_acts.append(Act_artist(randbelow(len(artists)),i))
 
         txt+= ","+str(i)+"," + str(randbelow(1000)/100)
 
@@ -214,7 +223,7 @@ for x in acts:
 
 txt+="\n"
 
-for x in actors:
+for x in artists:
     txt+= x.SQL()
 txt+="\n"
 
