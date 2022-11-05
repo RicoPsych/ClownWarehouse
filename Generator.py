@@ -3,9 +3,9 @@ import pandas
 import datetime
 
 
-T0 = datetime.datetime(2001,1,1)
-T1 = datetime.datetime(2011,6,30)
-T2 = datetime.datetime(2022,12,31)
+T0 = datetime.date(1990,1,1)
+T1 = datetime.date(2006,6,30)
+T2 = datetime.date(2022,12,31)
 
 dates = pandas.date_range(T0,T1,periods=25000) #,freq="M"
 print(dates)
@@ -79,7 +79,7 @@ class Equipement:
         self.name = name
 
     def SQL(self):
-        txt = "INSERT INTO equipements (id,name) VALUES ("
+        txt = "INSERT INTO equipement (id,name) VALUES ("
         txt += str(self.id)+ ","  
         txt += "'" + str(self.name)+ "'"
         txt += ");\n"
@@ -162,7 +162,7 @@ for dir in directors_name:
 
 i = 0
 for eq in equipement_name:
-    directors.append(Equipement(i,eq))
+    equipement.append(Equipement(i,eq))
     i+= 1
 
 
@@ -175,16 +175,19 @@ for name in range(6):
 
 i = 0
 for date in dates:
-    performances.append(Performance(i,randbelow(len(directors)),date,location_name[randbelow(len(location_name))]))
+    date: datetime.date
+    performances.append(Performance(i,randbelow(len(directors)),"'"+date.strftime("%Y-%m-%d")+"'" ,location_name[randbelow(len(location_name))]))
     i+=1
 
 
+
+##Tworzenie pliku csv 
 
 file = open("Survey.csv","w")
 txt = "Id,Name,Survey nr,id1,avg1,id2,avg2,id3,avg3\n"
 
 i = 0
-for performance  in performances: #dodac csvke
+for performance  in performances: 
     performance : Performance
     
     txt+= str(performance.id) +",placeholder," + str(randbelow(3000))
@@ -213,6 +216,16 @@ for x in directors:
     txt+= x.SQL()
 txt+="\n"
 
+for x in artists:
+    txt+= x.SQL()
+txt+="\n"
+
+
+for x in equipement:
+    txt+= x.SQL()
+txt+="\n"
+
+
 for x in performances:
     txt+= x.SQL()
 
@@ -223,14 +236,7 @@ for x in acts:
 
 txt+="\n"
 
-for x in artists:
-    txt+= x.SQL()
-txt+="\n"
 
-
-for x in equipement:
-    txt+= x.SQL()
-txt+="\n"
 
 for x in eq_acts:
     txt+= x.SQL()
