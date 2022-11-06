@@ -270,7 +270,7 @@ print("sql1")
 #drugi okres czasowy
 
 file = open("SQL_Queries2.sql","w")
-txt = ""
+txt = "Update artists set pseudonym = 'Klaunuś' where id = 13;\nUpdate performances set location='Sopot' where id = 12433;\nUpdate artists set surname='Grzegorzewicz' where id = 15;"
 for x in performances[1]:
     txt+= x.SQL()
 txt+="\n"
