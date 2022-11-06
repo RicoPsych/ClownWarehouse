@@ -7,8 +7,8 @@ T0 = datetime.date(1990,1,1)
 T1 = datetime.date(2006,6,30)
 T2 = datetime.date(2022,12,31)
 
-dates = pandas.date_range(T0,T1,periods=25000) #,freq="M"
-print(dates)
+dates = pandas.date_range(T0,T1,periods=37500) #,freq="M"
+dates2 = pandas.date_range(T1,T2,periods=37500)
 
 directors_name = [("Martin","Wilder"),("Anya","Holding"),("Annabella","Livingston"),("Kendal","Millington"),("Seamus","Howe")]
 equipement_name = ["Armata","Trapez","Lina do chodzenia","Huśtawka","Szczudła",
@@ -18,14 +18,14 @@ location_name = ["Gdańsk","Poznań","Warszawa","Kraków","Szczecin","Olsztyn","
 act_name = ["Wystrzał z armaty","Sztuczki na trapezie","Chodzenie po linie","Huśtanie Ekstremalne","Chodzenie na szczudłach",
 "Połykanie miecza","Plucie ogniem","Żonglerka Kijami","Żonglerka Kulami","Jazda na monocyklu","Wysokie skoki na trampolinie","Skoki do wody","Sztuczka z przecinaniem"]
 act_desc = ["..."]
-incidents_report = [["Złamana Ręka","Złamana noga","Rany cięte","Poparzenia","Skręcona kostka","Zwichnięta ręka"]]
+incidents_report = [["Złamana Ręka","Złamana noga","Rany cięte","Poparzenia","Skręcona kostka","Zwichnięta ręka"],["Złamanie","Przetarcie","Pęknięcie","Rozregulowanie"]]
 
 art_name = ["Hubert","Paweł","Szymon","Ola","Ania","Adam"]
 art_surname = ["Wiewór","Kojot","Kotek","Szczur","Mysz","Młot","Gracz","Klaunowski"]
 art_pseud1 = ["Duży","Mały","Gruby","Czerwony","Czarny","Szary"]
 art_pseud2 = ["Nos","Lis","Kot","Szop","Gibuś","Kangur","Grzyb","Żongler"]
 
-
+#X - performance , 3x - acts act_eq act_art, 1.5x - incident , okolo 11.5 * ilość dat
 
 
 
@@ -53,7 +53,7 @@ class Act:
         self.desc = desc
 
     def SQL(self):
-        txt = "INSERT INTO acts (id,performance_id,name,decription) VALUES ("
+        txt = "INSERT INTO acts (id,performance_id,name,description) VALUES ("
         txt += str(self.id)+ ","  
         txt += str(self.performance_id)+ ","
         txt += "'" + str(self.name)+ "',"
@@ -123,7 +123,7 @@ class Incident:
     def SQL(self):
         txt = "INSERT INTO incidents (id,type,report,act_id) VALUES ("
         txt += str(self.id)+ ","          
-        txt += "'" + str(self.type)+ "',"
+        txt +=  str(self.type)+ ","
         txt += "'" + str(self.report)+ "',"
         txt += str(self.act_id) 
         txt += ");\n"
@@ -145,15 +145,18 @@ class Artistic_director:
 
 
 directors = []
-performances =[]
-acts = []
-
 artists = []
 equipement = []
 
-eq_acts = []
-art_acts = []
-injuries = []
+
+performances =[[],[]]
+acts = [[],[]]
+
+eq_acts = [[],[]]
+art_acts = [[],[]]
+injuries = [[],[]]
+
+
 
 i = 0
 for dir in directors_name:
@@ -172,45 +175,59 @@ for name in range(6):
         artists.append(Artist(i,art_name[name],art_surname[surname],art_pseud1[name]+" "+art_pseud2[surname]))
         i+=1
         
+##Tworzenie występów
 
 i = 0
 for date in dates:
     date: datetime.date
-    performances.append(Performance(i,randbelow(len(directors)),"'"+date.strftime("%Y-%m-%d")+"'" ,location_name[randbelow(len(location_name))]))
+    performances[0].append(Performance(i,randbelow(len(directors)),"'"+date.strftime("%Y-%m-%d")+"'" ,location_name[randbelow(len(location_name))]))
+    i+=1
+
+for date in dates2:
+    date: datetime.date
+    performances[1].append(Performance(i,randbelow(len(directors)),"'"+date.strftime("%Y-%m-%d")+"'" ,location_name[randbelow(len(location_name))]))
     i+=1
 
 
-
 ##Tworzenie pliku csv 
-
-file = open("Survey.csv","w")
-txt = "Id,Name,Survey nr,id1,avg1,id2,avg2,id3,avg3\n"
-
 i = 0
-for performance  in performances: 
-    performance : Performance
-    
-    txt+= str(performance.id) +",placeholder," + str(randbelow(3000))
+x = 0
+for zzz in range(2):
 
-    for x in range(3): 
-        random_nr = randbelow(len(act_name))
-        acts.append(Act(i,performance.id,act_name[random_nr],act_desc[0]))
-        eq_acts.append(Act_eq(random_nr,i))
-        art_acts.append(Act_artist(randbelow(len(artists)),i))
+    file = open("Survey"+str(zzz)+".csv","w")
+    txt = "Id,Name,Survey nr,id1,avg1,id2,avg2,id3,avg3\n"
 
-        txt+= ","+str(i)+"," + str(randbelow(1000)/100)
+ 
+    for performance in performances[zzz]: 
+        performance : Performance
+        
+        txt+= str(performance.id) +",placeholder," + str(randbelow(3000))
 
-        i+=1
-    txt+="\n"
+        for xx in range(3): 
+            random_nr = randbelow(len(act_name))
+
+            acts[zzz].append(Act(i,performance.id,act_name[random_nr],act_desc[0]))
+            eq_acts[zzz].append(Act_eq(random_nr,i))
+            art_acts[zzz].append(Act_artist(randbelow(len(artists)),i))
+
+            for z in range(randbelow(2)):
+                type = randbelow(2)
+                injuries[zzz].append(Incident(x,type,incidents_report[type][randbelow(len(incidents_report[type]))],i))
+                x+=1
+
+            txt+= ","+str(i)+"," + str(randbelow(1000)/100)
+
+            i+=1
+        txt+="\n"
 
 
-file.write(txt)
-file.close()
+    file.write(txt)
+    file.close()
+    print("csv"+str(zzz))
 
-
+#dodać 1 okres czasowy
 
 file = open("SQL_Queries.sql","w")
-
 txt = ""
 for x in directors:
     txt+= x.SQL()
@@ -220,35 +237,58 @@ for x in artists:
     txt+= x.SQL()
 txt+="\n"
 
-
 for x in equipement:
     txt+= x.SQL()
 txt+="\n"
 
 
-for x in performances:
+for x in performances[0]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in acts[0]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in eq_acts[0]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in art_acts[0]:
     txt+= x.SQL()
 
 txt+="\n"
 
-for x in acts:
+for x in injuries[0]:
+    txt+= x.SQL()
+
+
+file.write(txt)
+file.close()
+
+print("sql1")
+#drugi okres czasowy
+
+file = open("SQL_Queries2.sql","w")
+txt = ""
+for x in performances[1]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in acts[1]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in eq_acts[1]:
+    txt+= x.SQL()
+txt+="\n"
+
+for x in art_acts[1]:
     txt+= x.SQL()
 
 txt+="\n"
 
-
-
-for x in eq_acts:
-    txt+= x.SQL()
-
-txt+="\n"
-
-for x in art_acts:
-    txt+= x.SQL()
-
-txt+="\n"
-
-for x in injuries:
+for x in injuries[1]:
     txt+= x.SQL()
 
 

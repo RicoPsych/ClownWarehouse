@@ -32,7 +32,7 @@ CREATE TABLE acts (
 	id Int,
 	performance_id Int,
 	name varchar(255),
-	decription varchar(255),
+	description varchar(255),
 	PRIMARY KEY (id), 
 	FOREIGN KEY (performance_id) REFERENCES performances(id));
 
