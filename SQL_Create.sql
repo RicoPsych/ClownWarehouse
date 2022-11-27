@@ -13,9 +13,10 @@ CREATE TABLE artists (
 	pseudonym varchar(255),
 	PRIMARY KEY (id));
 
-CREATE TABLE equipement (
+CREATE TABLE equipment (
 	id int,
 	name varchar(255),
+	producer varchar(255),
 	PRIMARY KEY (id));
 
 CREATE TABLE performances (
@@ -31,12 +32,18 @@ CREATE TABLE performances (
 CREATE TABLE acts (
 	id Int,
 	performance_id Int,
+	artist_id Int,
+	equipment_id Int,
 	name varchar(255),
 	description varchar(255),
+	
 	PRIMARY KEY (id), 
-	FOREIGN KEY (performance_id) REFERENCES performances(id));
+	FOREIGN KEY (performance_id) REFERENCES performances(id),
+	FOREIGN KEY (artist_id) REFERENCES artists(id),
+	FOREIGN KEY (equipment_id) REFERENCES equipment(id)
+	);
 
-CREATE TABLE incidents (
+CREATE TABLE accidents (
 	id int,
 	type int,
 	report varchar(255),
@@ -44,21 +51,21 @@ CREATE TABLE incidents (
 	PRIMARY KEY (id), 
 	FOREIGN KEY (act_id) REFERENCES acts(id));
 
-CREATE TABLE act_equipement (
-	equipement_id Int,
-	act_id Int
-	PRIMARY KEY (equipement_id,act_id),
-	FOREIGN KEY (equipement_id) REFERENCES equipement(id),
-	FOREIGN KEY (act_id) REFERENCES acts(id)
-);
+-- CREATE TABLE act_equipment (
+-- 	equipment_id Int,
+-- 	act_id Int
+-- 	PRIMARY KEY (equipement_id,act_id),
+-- 	FOREIGN KEY (equipement_id) REFERENCES equipement(id),
+-- 	FOREIGN KEY (act_id) REFERENCES acts(id)
+-- );
 
-CREATE TABLE artist_act (
-	artist_id int,
-	act_id int,
-	PRIMARY KEY (artist_id,act_id),
-	FOREIGN KEY (artist_id) REFERENCES artists(id),
-	FOREIGN KEY (act_id) REFERENCES acts(id)
-);
+-- CREATE TABLE artist_act (
+-- 	artist_id int,
+-- 	act_id int,
+-- 	PRIMARY KEY (artist_id,act_id),
+-- 	FOREIGN KEY (artist_id) REFERENCES artists(id),
+-- 	FOREIGN KEY (act_id) REFERENCES acts(id)
+-- );
 /*
 DROP DATABASE Circus;
 
