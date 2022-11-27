@@ -21,18 +21,21 @@ CREATE TABLE equipment (
 CREATE TABLE performances (
     id Int,
     artistic_director_id Int,
-    date Int,
-    location varchar(255),
+    date_id Int,
+    city varchar(255),
 	PRIMARY KEY (id),
-	FOREIGN KEY (artistic_director_id) REFERENCES artisitc_directors(id)
+	FOREIGN KEY (artistic_director_id) REFERENCES artisitc_directors(id),
+	FOREIGN KEY (date_id) REFERENCES date(id)
 );
 
-CREATE TABLE Date (
+CREATE TABLE date (
     id Int,
     year Int,
 	month varchar(12),
-    day Int,
+    month_no Int,
+	day Int,
     day_of_week varchar(15),
+	day_of_week_no Int
 	PRIMARY KEY (id)
 
 );
@@ -45,7 +48,6 @@ CREATE TABLE acts (
 	artist_id Int,
 	equipment_id Int,
 	accident_id Int,
-	description varchar(255),
 	grade float,
 	surveyed Int,
 	accidents_num Int,
@@ -54,15 +56,15 @@ CREATE TABLE acts (
 	FOREIGN KEY (performance_id) REFERENCES performances(id),
 	FOREIGN KEY (artist_id) REFERENCES artists(id),
 	FOREIGN KEY (equipment_id) REFERENCES equipment(id),
-	FOREIGN KEY (accident_id) REFERENCES acidents(id)
+	FOREIGN KEY (accident_id) REFERENCES accidents(id)
 	);
 
 CREATE TABLE accidents (
 	id int,
 	type int,
 	report varchar(255),
-	PRIMARY KEY (id), 
-
+	PRIMARY KEY (id)
+);
 -- CREATE TABLE act_equipment (
 -- 	equipment_id Int,
 -- 	act_id Int
