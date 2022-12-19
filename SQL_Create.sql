@@ -34,6 +34,7 @@ CREATE TABLE acts (
 	id Int,
 	performance_id Int,
 	artist_id Int,
+	accident_id Int,
 	equipment_id Int,
 	name varchar(255),
 	description varchar(255),
@@ -41,6 +42,7 @@ CREATE TABLE acts (
 	PRIMARY KEY (id), 
 	FOREIGN KEY (performance_id) REFERENCES performances(id),
 	FOREIGN KEY (artist_id) REFERENCES artists(id),
+	FOREIGN KEY (accident_id) REFERENCES accidents(id),
 	FOREIGN KEY (equipment_id) REFERENCES equipment(id)
 	);
 
@@ -48,9 +50,9 @@ CREATE TABLE accidents (
 	id int,
 	type int,
 	report varchar(255),
-	act_id int,
-	PRIMARY KEY (id), 
-	FOREIGN KEY (act_id) REFERENCES acts(id));
+--	act_id int,
+	PRIMARY KEY (id));
+--	FOREIGN KEY (act_id) REFERENCES acts(id));
 
 -- CREATE TABLE act_equipment (
 -- 	equipment_id Int,

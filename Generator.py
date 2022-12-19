@@ -18,7 +18,7 @@ location_name = ["Gdańsk","Poznań","Warszawa","Kraków","Szczecin","Olsztyn","
 act_name = ["Wystrzał z armaty","Sztuczki na trapezie","Chodzenie po linie","Huśtanie Ekstremalne","Chodzenie na szczudłach",
 "Połykanie miecza","Plucie ogniem","Żonglerka Kijami","Żonglerka Kulami","Jazda na monocyklu","Wysokie skoki na trampolinie","Skoki do wody","Sztuczka z przecinaniem"]
 act_desc = ["..."]
-incidents_report = [["Złamana Ręka","Złamana noga","Rany cięte","Poparzenia","Skręcona kostka","Zwichnięta ręka"],["Złamanie","Przetarcie","Pęknięcie","Rozregulowanie"]]
+incidents_report = [["Brak"],["Złamana Ręka","Złamana noga","Rany cięte","Poparzenia","Skręcona kostka","Zwichnięta ręka"],["Złamanie","Przetarcie","Pęknięcie","Rozregulowanie"]]
 producers = ["Yamaha","Klaunopol","Klaunex","Cyrkowo","Cyrkowe akcesoria","ClownStuff"]
 
 art_name = ["Hubert","Paweł","Szymon","Ola","Ania","Adam"]
@@ -47,20 +47,23 @@ class Performance:
         return txt
 
 class Act:
-    def __init__(self,id,performance_id,id_artist,id_eq,name,desc):
+    def __init__(self,id,performance_id,id_accident,id_artist,id_eq,name,desc):
         self.id = id
         self.performance_id = performance_id
         self.name = name
         self.desc = desc
+        self.accident_id = id_accident
         self.artist_id = id_artist 
         self.equipment_id = id_eq
 
     def SQL(self):
-        txt = "INSERT INTO acts (id,performance_id,artist_id,equipment_id,name,description) VALUES ("
+        txt = "INSERT INTO acts (id,performance_id,artist_id,accident_id,equipment_id,name,description) VALUES ("
         txt += str(self.id)+ ","  
         txt += str(self.performance_id)+ ","
         txt += str(self.artist_id)+ ","
-        
+
+        txt += str(self.accident_id)+ ","
+
         txt += str(self.equipment_id)+ ","
 
         txt += "'" + str(self.name)+ "',"
@@ -124,18 +127,18 @@ class Artist:
         return txt
 
 class Incident:
-    def __init__(self,id,type,report,act_id):
+    def __init__(self,id,type,report):
         self.id = id
         self.type = type
         self.report = report
-        self.act_id = act_id
+        #self.act_id = act_id
     
     def SQL(self):
-        txt = "INSERT INTO accidents (id,type,report,act_id) VALUES ("
+        txt = "INSERT INTO accidents (id,type,report) VALUES ("
         txt += str(self.id)+ ","          
         txt +=  str(self.type)+ ","
         txt += "'" + str(self.report)+ "',"
-        txt += str(self.act_id) 
+        #txt += str(self.act_id) 
         txt += ");\n"
         return txt
 
@@ -164,7 +167,7 @@ acts = [[],[]]
 
 eq_acts = [[],[]]
 art_acts = [[],[]]
-injuries = [[],[]]
+injuries = []
 
 
 ##Dyrektorzy
@@ -184,7 +187,14 @@ for name in range(6):
     for surname in range(8):
         artists.append(Artist(i,art_name[name],art_surname[surname],art_pseud1[name]+" "+art_pseud2[surname]))
         i+=1
-        
+##Wypadki
+i= 0
+for type in range(3):
+    for report in incidents_report[type]:
+        injuries.append(Incident(i,type,report))
+        i+=1
+
+
 ##Tworzenie występów
 
 i = 0
@@ -216,15 +226,10 @@ for zzz in range(2):
         for xx in range(3): 
             random_nr = randbelow(len(act_name))
             ##Akty
-            acts[zzz].append(Act(i,performance.id, randbelow(len(artists)),random_nr,act_name[random_nr],act_desc[0]))
+            acts[zzz].append(Act(i,performance.id, randbelow(len(injuries)) ,randbelow(len(artists)),random_nr,act_name[random_nr],act_desc[0]))
             #eq_acts[zzz].append(Act_eq(random_nr,i))
             #art_acts[zzz].append(Act_artist(randbelow(len(artists)),i))
             #injuries
-            for z in range(randbelow(2)):
-                type = randbelow(2)
-                injuries[zzz].append(Incident(x,type,incidents_report[type][randbelow(len(incidents_report[type]))],i))
-                x+=1
-
             txt+= ","+str(i)+"," + str(randbelow(1000)/100)
 
             i+=1
@@ -251,6 +256,9 @@ for x in equipement:
     txt+= x.SQL()
 txt+="\n"
 
+for x in injuries:
+    txt+= x.SQL()
+
 
 for x in performances[0]:
     txt+= x.SQL()
@@ -268,8 +276,6 @@ txt+="\n"
 #     txt+= x.SQL()
 # txt+="\n"
 
-for x in injuries[0]:
-    txt+= x.SQL()
 
 
 file.write(txt)
@@ -279,7 +285,9 @@ print("sql1")
 #drugi okres czasowy
 
 file = open("SQL_Queries2.sql","w")
-txt = "Update artists set pseudonym = 'Klaunuś' where id = 13;\nUpdate performances set location='Sopot' where id = 12433;\nUpdate artists set surname='Grzegorzewicz' where id = 15;\n"
+txt = "Update equipment set producer = 'Yamaha' where id = 3;\nUpdate equipment set producer = 'Yamaha' where id = 2;\nUpdate performances set location='Sopot' where id = 12433;\nUpdate artists set surname='Grzegorzewicz' where id = 15;\n"
+
+
 for x in performances[1]:
     txt+= x.SQL()
 txt+="\n"
@@ -296,9 +304,6 @@ for x in art_acts[1]:
     txt+= x.SQL()
 
 txt+="\n"
-
-for x in injuries[1]:
-    txt+= x.SQL()
 
 
 file.write(txt)

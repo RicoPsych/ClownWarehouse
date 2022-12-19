@@ -1,25 +1,27 @@
 /*CREATE DATABASE Circus
 */
+Use Circus
+
 CREATE TABLE artisitc_directors (
-	id int,
+	id int IDENTITY(1,1),
 	name_surname varchar(255),
 	PRIMARY KEY (id));
 
 CREATE TABLE artists (
-	id int,
+	id int IDENTITY(1,1),
 	name_surname varchar(255),
 	pseudonym varchar(255),
 	PRIMARY KEY (id));
 
 CREATE TABLE equipment (
-	id int,
+	id int IDENTITY(1,1),
 	name varchar(255),
 	producer varchar(255),
 	is_current bit,
 	PRIMARY KEY (id));
 
 CREATE TABLE performances (
-    id Int,
+    id Int IDENTITY(1,1),
     artistic_director_id Int,
     date_id Int,
     city varchar(255),
@@ -29,7 +31,7 @@ CREATE TABLE performances (
 );
 
 CREATE TABLE date (
-    id Int,
+    id Int IDENTITY(1,1),
     year Int,
 	month varchar(12),
     month_no Int,
@@ -43,7 +45,7 @@ CREATE TABLE date (
 
 
 CREATE TABLE acts (
-	id Int,
+	id Int IDENTITY(1,1),
 	performance_id Int,
 	artist_id Int,
 	equipment_id Int,
@@ -60,7 +62,7 @@ CREATE TABLE acts (
 	);
 
 CREATE TABLE accidents (
-	id int,
+	id int IDENTITY(1,1),
 	type int,
 	report varchar(255),
 	PRIMARY KEY (id)
