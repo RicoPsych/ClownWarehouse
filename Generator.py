@@ -230,7 +230,7 @@ for zzz in range(2):
             #eq_acts[zzz].append(Act_eq(random_nr,i))
             #art_acts[zzz].append(Act_artist(randbelow(len(artists)),i))
             #injuries
-            txt+= ","+str(i)+"," + str(randbelow(1000)/100)
+            txt+= ","+str(i)+"," + str(randbelow(1000))
 
             i+=1
         txt+="\n"
